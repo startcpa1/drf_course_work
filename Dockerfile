@@ -4,6 +4,6 @@ WORKDIR /habbits_app
 
 COPY requirements.txt .
 
-RUN pip install -r /habbits_app/requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
