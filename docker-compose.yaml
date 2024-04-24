@@ -27,13 +27,15 @@ services:
 
   web:
     build: .
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
     tty: true
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     volumes:
@@ -42,6 +44,8 @@ services:
 
   celery:
     build: .
+    env_file:
+      - .env
     depends_on:
       web:
         condition: service_started
@@ -53,13 +57,15 @@ services:
 
   celery-beat:
       build: .
+      env_file:
+        - .env
       depends_on:
         web:
           condition: service_started
         db:
           condition: service_healthy
       tty: true
-      command: python manage.py migrate && celery -A config beat -l INFO
+      command: celery -A config beat -l INFO
       volumes:
         - .:/habits_app
 
